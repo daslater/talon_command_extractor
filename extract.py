@@ -96,23 +96,19 @@ class user_actions:
 
         # get all the commands in all the contexts
         list_of_contexts = registry.contexts.items()
-        for key, value in list_of_contexts:
-            commands = value.commands  # Get all the commands from a context
+        for name, context in list_of_contexts:
+            commands = context.commands  # Get all the commands from a context
             if len(commands) > 0:
-                formatted_context = format_context_name(key)
-                file_name = format_file_name(key)
+                context_name = format_context_name(name)
+                file_name = format_file_name(name)
 
                 # If this context name is a duplicate, create new names and update the dict
-                if formatted_context in command_groups:
-                    dup_command_group = command_groups[formatted_context]
-                    dup_context, temp = resolve_dup(dup_command_group.file, file_name, formatted_context)
-                    dup_command_group.context = dup_context
-                    command_groups.pop(formatted_context)
-                    command_groups[dup_context] = dup_command_group
-                    formatted_context = temp
+                if context_name in command_groups:
+                    other = command_groups.pop(context_name)
+                    other.context, context_name = resolve_dup(other.file, file_name, context_name)
+                    command_groups[other.context] = other
 
-                command_groups[formatted_context] = \
-                    CommandGroup(file_name, formatted_context, context_commands(commands))
+                command_groups[context_name] = CommandGroup(file_name, context_name, context_commands(commands))
 
         this_dir = os.path.dirname(os.path.realpath(__file__))
         file_path = os.path.join(this_dir, 'talon_commands.json')
