@@ -8,6 +8,7 @@ class CommandGroup:
         self.context = context
         self.commands = commands
 
+
 def key_commands(list_name):
     command_list = registry.lists[list_name][0]
     return CommandGroup('code/keys.py', list_name, command_list)
@@ -25,7 +26,7 @@ def context_commands(commands):
     for key in commands:
         try:
             rule = commands[key].rule.rule
-            implementation = commands[key].target.code.replace("\n", "\n\t\t")
+            implementation = commands[key].target.code  # .replace("\n", "\n\t\t")
         except Exception:
             continue
         rules[rule] = implementation
@@ -76,7 +77,7 @@ def resolve_dup(full_name1, full_name2, formatted_name):
     while splits1[index] == splits2[index]:
         index -= 1
 
-    return f"{formatted_name} {splits1[index]}", f"{formatted_name} {splits2[index]}"
+    return f"{formatted_name} ({splits1[index]})", f"{formatted_name} ({splits2[index]})"
 
 
 mod = Module()
