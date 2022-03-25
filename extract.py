@@ -29,8 +29,8 @@ def context_commands(commands):
             implementation = commands[key].target.code  # .replace("\n", "\n\t\t")
         except Exception:
             continue
-        lines = [line for line in implementation.split("\n") if line[0] != "#"]
-        rules[rule] = lines.join("\n")
+        lines = [line for line in implementation.split("\n") if line and line[0] != "#"]
+        rules[rule] = "\n".join(lines)
 
     return rules
 
